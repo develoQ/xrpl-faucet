@@ -32,9 +32,7 @@ const Home: NextPage = () => {
   const handleAddressChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = e.target.value
     setError(undefined)
-    try {
-      isValidClassicAddress(value)
-    } catch (e) {
+    if (value !== '' && !isValidClassicAddress(value)) {
       setError('不正な入力です')
     }
     setAddress(value)
@@ -68,7 +66,12 @@ const Home: NextPage = () => {
             autoFocus
           />
           <div className='flex justify-center pt-4 sm:pt-0'>
-            <Button variant='contained' className='p-1 ml-2 w-40 text-sm' disabled={loading} onClick={handleGetFaucet}>
+            <Button
+              variant='contained'
+              className='p-1 ml-2 w-40 text-sm'
+              disabled={loading || !!error}
+              onClick={handleGetFaucet}
+            >
               <div className='flex relative justify-center items-center text-center'>
                 {loading && (
                   <svg
