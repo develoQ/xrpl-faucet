@@ -25,7 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
   const { account, network } = JSON.parse(req.body) as FaucetRequestBody
 
-  const server = network === 'testnet' ? XRPLNetwork.Testnet : network === 'devnet' ? XRPLNetwork.Devnet : XRPLNetwork.NFTDevnet
+  const server =
+    network === 'testnet' ? XRPLNetwork.Testnet : network === 'devnet' ? XRPLNetwork.Devnet : XRPLNetwork.NFTDevnet
 
   const client = new Client(server)
   await client.connect()
