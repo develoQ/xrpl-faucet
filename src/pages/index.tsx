@@ -48,7 +48,7 @@ const Home: NextPage = () => {
 
   return (
     <div className='flex justify-center'>
-      <div className='px-3 mt-36 mb-3 w-full max-w-xl'>
+      <div className='py-36 px-3 mb-3 w-full max-w-xl'>
         <h1 className='flex-grow mb-12 font-title text-5xl text-center'>XRP Ledger Faucet</h1>
         <div className='my-8'>
           <SelectNFTokenMitFlags onChange={(n) => setNetwork(n)} />
