@@ -16,6 +16,7 @@ export type FaucetRequestBody = {
 
 export type FaucetResponse = {
   address: string
+  secret?: string
   balance: number
 }
 
@@ -30,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   const client = new Client(server)
   await client.connect()
-  const response = await client.fundWallet({ classicAddress: account } as any)
+  const response = await client.fundWallet(account && { classicAddress: account } as any)
   await client.disconnect()
-  res.status(200).json({ address: response.wallet.classicAddress, balance: response.balance })
+  res.status(200).json({ address: response.wallet.classicAddress, secret: response.wallet.seed, balance: response.balance })
 }

@@ -97,6 +97,7 @@ const Home: NextPage = () => {
         {faucetResult && (
           <div className='mt-12'>
             <div>Account: {faucetResult.address}</div>
+            {faucetResult.secret && <div>Secret: {faucetResult.secret}</div>}
             <div>Balance: {faucetResult.balance}</div>
           </div>
         )}
