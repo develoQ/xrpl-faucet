@@ -7,7 +7,13 @@ type Props = {
   onChange: (network: Networks) => void
 }
 
-const networkList: Networks[] = [Network.Testnet, Network.Devnet, Network.NFTDevnet, Network.AMMDevnet]
+const networkList: Networks[] = [
+  Network.Testnet,
+  Network.Devnet,
+  Network.NFTDevnet,
+  Network.AMMDevnet,
+  Network.HooksTestnetV2,
+]
 
 export const SelectNFTokenMitFlags: FC<Props> = ({ onChange }) => {
   const [selectNetwork, setNetwork] = useState<Networks>(Network.Testnet)
