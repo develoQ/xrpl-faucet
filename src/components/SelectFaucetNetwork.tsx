@@ -10,9 +10,9 @@ type Props = {
 const networkList: Networks[] = [
   Network.Testnet,
   Network.Devnet,
-  Network.NFTDevnet,
+  // Network.NFTDevnet,
   Network.AMMDevnet,
-  Network.HooksTestnetV2,
+  Network.HooksV2Testnet,
 ]
 
 export const SelectNFTokenMitFlags: FC<Props> = ({ onChange }) => {

@@ -1,7 +1,7 @@
 export enum Network {
-  Testnet = 'testnet',
-  Devnet = 'devnet',
-  NFTDevnet = 'nft-devnet',
-  AMMDevnet = 'amm-devnet',
-  HooksTestnetV2 = 'hooks-testnet-v2'
+  Testnet = 'Testnet',
+  Devnet = 'Devnet',
+  NFTDevnet = 'NFT-Devnet',
+  AMMDevnet = 'AMM-Devnet',
+  HooksV2Testnet = 'Hooks-Testnet-v2',
 }
