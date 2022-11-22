@@ -33,7 +33,7 @@ const Home: NextPage = () => {
     const value = e.target.value
     setError(undefined)
     if (value !== '' && !isValidClassicAddress(value)) {
-      setError('不正な入力です')
+      setError('Invalid address')
     }
     setAddress(value)
   }
@@ -41,8 +41,12 @@ const Home: NextPage = () => {
   const handleGetFaucet = async () => {
     setLoading(true)
     setFaucetResult(null)
-    const data = await getFaucet(network, address)
-    setFaucetResult(data)
+    try {
+      const data = await getFaucet(network, address)
+      setFaucetResult(data)
+    } catch (e) {
+      setError('Error')
+    }
     setLoading(false)
   }
 
@@ -96,6 +100,7 @@ const Home: NextPage = () => {
         {error && <span className='ml-2 text-sm text-red-600'>{error}</span>}
         {faucetResult && (
           <div className='mt-12'>
+            <div>Network: {faucetResult.network}</div>
             <div>Account: {faucetResult.address}</div>
             {faucetResult.secret && <div>Secret: {faucetResult.secret}</div>}
             <div>Balance: {faucetResult.balance}</div>
