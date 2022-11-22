@@ -33,7 +33,7 @@ const Home: NextPage = () => {
     const value = e.target.value
     setError(undefined)
     if (value !== '' && !isValidClassicAddress(value)) {
-      setError('不正な入力です')
+      setError('Invalid address')
     }
     setAddress(value)
   }
@@ -45,7 +45,7 @@ const Home: NextPage = () => {
       const data = await getFaucet(network, address)
       setFaucetResult(data)
     } catch (e) {
-      setError('エラーが発生しました。')
+      setError('Error')
     }
     setLoading(false)
   }
