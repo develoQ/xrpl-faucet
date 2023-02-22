@@ -60,7 +60,7 @@ const Home: NextPage = () => {
 
         <div className='items-center focus:bg-white sm:flex'>
           <input
-            className={`block w-full appearance-none rounded border bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:outline-none ${
+            className={`input block w-full appearance-none rounded border bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:outline-none ${
               error && 'border-red-500'
             }`}
             type='text'
@@ -79,7 +79,7 @@ const Home: NextPage = () => {
               <div className='flex relative justify-center items-center text-center'>
                 {loading && (
                   <svg
-                    className='absolute left-0 mr-2 w-4 h-4 text-blue-100 animate-spin'
+                    className='absolute mr-2 w-8 h-8 text-blue-700 animate-spin'
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
                     viewBox='0 0 24 24'

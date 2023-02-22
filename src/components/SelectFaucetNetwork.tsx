@@ -44,7 +44,8 @@ export const SelectFaucetNetwork: FC<Props> = ({ onChange }) => {
             />
             <label
               htmlFor={`${network}`}
-              className='inline-flex justify-between items-center p-3 w-full text-gray-500 peer-checked:text-gray-600 hover:text-gray-600 bg-white peer-checked:bg-blue-200 hover:bg-gray-50 rounded-lg border-2 border-gray-200 peer-checked:border-blue-600 cursor-pointer'
+              // eslint-disable-next-line tailwindcss/no-custom-classname
+              className='inline-flex justify-between items-center p-3 w-full text-left text-gray-500 peer-checked:text-gray-600 hover:text-gray-600 normal-case bg-white peer-checked:bg-blue-200 hover:bg-gray-50 rounded-lg border-2 border-gray-200 peer-checked:border-blue-600 cursor-pointer btn'
             >
               <div className='flex justify-between items-center w-full'>
                 <div className='w-full text-sm font-semibold'>{network}</div>
