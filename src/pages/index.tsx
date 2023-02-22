@@ -138,7 +138,11 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        {tokenType === 'TOKEN' && <>Token Issuer: {issuer}</>}
+        {tokenType === 'TOKEN' && (
+          <>
+            Token Issuer: <span className='text-sm sm:text-base'>{issuer}</span>
+          </>
+        )}
         <div className='items-center focus:bg-white sm:flex'>
           <div className='w-full space-y-2'>
             {tokenType === 'TOKEN' && (
@@ -164,11 +168,11 @@ const Home: NextPage = () => {
               autoFocus
             />
           </div>
-          <div className='space-y-2 pt-4 sm:pt-0'>
+          <div className='flex justify-center pt-4 sm:block sm:space-y-2 sm:pt-0'>
             {tokenType === 'TOKEN' && (
               <Button
                 variant='outline'
-                className='ml-2 w-40 p-1 text-sm normal-case'
+                className='ml-2 w-36 p-1 text-sm normal-case md:w-40'
                 disabled={loading || !!error}
                 onClick={handleSetTrustLine}
               >
@@ -177,7 +181,7 @@ const Home: NextPage = () => {
             )}
             <Button
               variant='contained'
-              className='ml-2 w-40 p-1 text-sm'
+              className='ml-2 w-36 p-1 text-sm md:w-40'
               disabled={loading || !!error}
               onClick={handleGetFaucet}
             >
@@ -206,7 +210,9 @@ const Home: NextPage = () => {
         {faucetResult && (
           <div className='mt-12'>
             <div>Network: {faucetResult?.network}</div>
-            <div>Account: {faucetResult.address}</div>
+            <div>
+              Account: <span className='text-sm sm:text-base'>{faucetResult.address}</span>
+            </div>
             {faucetResult.secret && <div>Secret: {faucetResult.secret}</div>}
             <div>Balance: {faucetResult.balance}</div>
           </div>
