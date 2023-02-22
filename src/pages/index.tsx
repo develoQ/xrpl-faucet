@@ -1,25 +1,59 @@
 import type { NextPage } from 'next'
-import { ChangeEventHandler, useState } from 'react'
+import { ChangeEventHandler, useEffect, useState } from 'react'
+import { overrideTailwindClasses } from 'tailwind-override'
 import { isValidClassicAddress } from 'xrpl/dist/npm/utils'
 
-import { FaucetRequestBody, FaucetResponse } from './api/faucet'
+import { FaucetDataResponse, FaucetRequestBody, FaucetResponse } from './api/faucet'
+import { TokenIssuerResponse } from './api/token-issuer'
 
 import { Network } from '@/@types/network'
 import { Button } from '@/components/Button'
 import { SelectFaucetNetwork } from '@/components/SelectFaucetNetwork'
+import { isValidRepresentation } from '@/utils/currency'
+
+const TOKEN_TYPE = ['XRP', 'TOKEN'] as const
 
 const Home: NextPage = () => {
   const [error, setError] = useState<string>()
   const [address, setAddress] = useState<string>('')
-  const [faucetResult, setFaucetResult] = useState<FaucetResponse | null>(null)
+  const [issuer, setIssuer] = useState<string>('')
+  const [tokenCode, setTokenCode] = useState<string>('')
+  const [faucetResult, setFaucetResult] = useState<FaucetDataResponse | null>(null)
   const [network, setNetwork] = useState<Network>(Network.Testnet)
+  const [tokenType, setTokenType] = useState<typeof TOKEN_TYPE[number]>('XRP')
   const [loading, setLoading] = useState(false)
 
-  const getFaucet = async (network: Network, address?: string) => {
-    const body: FaucetRequestBody = {
-      account: address,
-      network: network,
+  useEffect(() => {
+    const f = async () => {
+      const response: TokenIssuerResponse = await (
+        await fetch('/api/token-issuer', {
+          method: 'POST',
+          body: JSON.stringify({ network }),
+        })
+      ).json()
+      console.log(response)
+      setIssuer(response.issuer)
     }
+    f()
+  }, [network])
+
+  const getFaucet = async (network: Network, address?: string) => {
+    let body: FaucetRequestBody
+    if (tokenType === 'XRP') {
+      body = {
+        type: tokenType,
+        account: address,
+        network: network,
+      }
+    } else {
+      body = {
+        type: tokenType,
+        account: address,
+        network: network,
+        currency: tokenCode,
+      }
+    }
+
     const response: FaucetResponse = await (
       await fetch('/api/faucet', {
         method: 'POST',
@@ -33,17 +67,30 @@ const Home: NextPage = () => {
     const value = e.target.value
     setError(undefined)
     if (value !== '' && !isValidClassicAddress(value)) {
-      setError('Invalid address')
+      setError('Invalid Address')
     }
     setAddress(value)
+  }
+
+  const handleTokenCodeChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.target.value
+    setError(undefined)
+    if (value === '' || !isValidRepresentation(value)) {
+      setError('Invalid TokenCode')
+    }
+    setTokenCode(value)
   }
 
   const handleGetFaucet = async () => {
     setLoading(true)
     setFaucetResult(null)
     try {
-      const data = await getFaucet(network, address)
-      setFaucetResult(data)
+      const data = (await getFaucet(network, address)) as any
+      if (!data?.message) {
+        setFaucetResult(data)
+      } else {
+        setError(data.message)
+      }
     } catch (e) {
       setError('Error')
     }
@@ -58,17 +105,48 @@ const Home: NextPage = () => {
           <SelectFaucetNetwork onChange={(n) => setNetwork(n)} />
         </div>
 
+        <div className='mt-12 mb-8 flex justify-center'>
+          <div className='btn-group w-full max-w-xs'>
+            {TOKEN_TYPE.map((type) => (
+              <button
+                key={type}
+                className={overrideTailwindClasses(
+                  `btn btn-primary w-1/2 ${tokenType === type ? 'btn-active' : 'btn-outline'}`
+                )}
+                onClick={() => setTokenType(type)}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {tokenType === 'TOKEN' && <>Token Issuer: {issuer}</>}
         <div className='items-center focus:bg-white sm:flex'>
-          <input
-            className={`input block w-full appearance-none rounded border bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:outline-none ${
-              error && 'border-red-500'
-            }`}
-            type='text'
-            placeholder='XRPL Address'
-            value={address}
-            onChange={handleAddressChange}
-            autoFocus
-          />
+          <div className='w-full space-y-2'>
+            {tokenType === 'TOKEN' && (
+              <input
+                className={`input block w-full appearance-none rounded border bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:outline-none ${
+                  error && 'border-red-500'
+                }`}
+                type='text'
+                placeholder='Token Code (USD/EUR...)'
+                value={tokenCode}
+                onChange={handleTokenCodeChange}
+                autoFocus
+              />
+            )}
+            <input
+              className={`input block w-full appearance-none rounded border bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:outline-none ${
+                error && 'border-red-500'
+              }`}
+              type='text'
+              placeholder='XRPL Address (r...)'
+              value={address}
+              onChange={handleAddressChange}
+              autoFocus
+            />
+          </div>
           <div className='flex justify-center pt-4 sm:pt-0'>
             <Button
               variant='contained'
@@ -76,7 +154,7 @@ const Home: NextPage = () => {
               disabled={loading || !!error}
               onClick={handleGetFaucet}
             >
-              <div className='relative flex items-center justify-center text-center'>
+              <div className='relative flex items-center justify-center text-center normal-case'>
                 {loading && (
                   <svg
                     className='absolute mr-2 h-8 w-8 animate-spin text-blue-700'
@@ -100,7 +178,7 @@ const Home: NextPage = () => {
         {error && <span className='ml-2 text-sm text-red-600'>{error}</span>}
         {faucetResult && (
           <div className='mt-12'>
-            <div>Network: {faucetResult.network}</div>
+            <div>Network: {faucetResult?.network}</div>
             <div>Account: {faucetResult.address}</div>
             {faucetResult.secret && <div>Secret: {faucetResult.secret}</div>}
             <div>Balance: {faucetResult.balance}</div>

@@ -1,60 +1,73 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import fetch from 'node-fetch'
 import { Client } from 'xrpl'
 
 import { Network } from '@/@types/network'
+import { getXRPFaucetNetwork, getTokenFaucetUrl } from '@/utils/faucet'
 
-enum XRPLNetwork {
-  Testnet = 'wss://s.altnet.rippletest.net:51233',
-  Devnet = 'wss://s.devnet.rippletest.net:51233',
-  NFTDevnet = 'wss://xls20-sandbox.rippletest.net:51233',
-  AMMDevnet = 'wss://amm.devnet.rippletest.net:51233',
-  HooksV2Testnet = 'wss://hooks-testnet-v2.xrpl-labs.com',
-  HooksV3Testnet = 'wss://hooks-testnet-v3.xrpl-labs.com',
-}
+export type FaucetRequestBody =
+  | {
+      type: 'XRP'
+      account?: string
+      network: Network
+    }
+  | {
+      type: 'TOKEN'
+      account?: string
+      network: Network
+      currency: string
+    }
 
-export type FaucetRequestBody = {
-  account?: string
-  network: Network
-}
-
-export type FaucetResponse = {
-  network: Network
-  address: string
-  secret?: string
-  balance: number
-}
+export type FaucetDataResponse = { network: Network; address: string; secret?: string; balance: number }
+export type FaucetResponse =
+  | FaucetDataResponse
+  | {
+      message: string
+    }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<FaucetResponse>) {
   if (req.method !== 'POST') {
     res.status(404).end()
   }
-  const { account, network } = JSON.parse(req.body) as FaucetRequestBody
-
-  let server: XRPLNetwork
-  if (network === Network.Testnet) {
-    server = XRPLNetwork.Testnet
-  } else if (network === Network.Devnet) {
-    server = XRPLNetwork.Devnet
-  } else if (network === Network.NFTDevnet) {
-    server = XRPLNetwork.NFTDevnet
-  } else if (network === Network.AMMDevnet) {
-    server = XRPLNetwork.AMMDevnet
-  } else if (network === Network.HooksV2Testnet) {
-    server = XRPLNetwork.HooksV2Testnet
-  } else if (network === Network.HooksV3Testnet) {
-    server = XRPLNetwork.HooksV3Testnet
+  const body = JSON.parse(req.body) as FaucetRequestBody
+  if (body.type === 'XRP') {
+    const server = getXRPFaucetNetwork(body.network)
+    const { account, network } = body
+    const client = new Client(server)
+    await client.connect()
+    const response = await client.fundWallet(account && ({ classicAddress: account } as any))
+    await client.disconnect()
+    res.status(200).json({
+      network: network,
+      address: response.wallet.classicAddress,
+      secret: response.wallet.seed,
+      balance: response.balance,
+    })
   } else {
-    throw new Error('invalid network')
+    const url = getTokenFaucetUrl(body.network)
+    const { account, currency, network } = body
+    const response = await fetch(`${url}/accounts`, {
+      method: 'POST',
+      body: JSON.stringify({
+        currency,
+        ...(account ? { destination: account } : {}),
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+    if (!response.ok) {
+      const data = (await response.json()) as any
+      console.log(data)
+      res.status(400).json({
+        message: data.error as string,
+      })
+      return
+    }
+    const data = (await response.json()) as any
+    res.status(200).json({
+      network: network,
+      address: data.account.classicAddress,
+      secret: data.account?.seed,
+      balance: data.balance,
+    })
   }
-
-  const client = new Client(server)
-  await client.connect()
-  const response = await client.fundWallet(account && ({ classicAddress: account } as any))
-  await client.disconnect()
-  res.status(200).json({
-    network: network,
-    address: response.wallet.classicAddress,
-    secret: response.wallet.seed,
-    balance: response.balance,
-  })
 }
