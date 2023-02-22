@@ -27,10 +27,10 @@ export const SelectFaucetNetwork: FC<Props> = ({ onChange }) => {
 
   return (
     <>
-      <label className='block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase' html-for='price'>
-        ネットワーク
+      <label className='mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700' html-for='price'>
+        Network
       </label>
-      <ul className='grid gap-6 w-full '>
+      <ul className='grid w-full gap-6 '>
         {networkList.map((network, index) => (
           <li key={index}>
             <input
@@ -45,9 +45,9 @@ export const SelectFaucetNetwork: FC<Props> = ({ onChange }) => {
             <label
               htmlFor={`${network}`}
               // eslint-disable-next-line tailwindcss/no-custom-classname
-              className='inline-flex justify-between items-center p-3 w-full text-left text-gray-500 peer-checked:text-gray-600 hover:text-gray-600 normal-case bg-white peer-checked:bg-blue-200 hover:bg-gray-50 rounded-lg border-2 border-gray-200 peer-checked:border-blue-600 cursor-pointer btn'
+              className='btn inline-flex w-full cursor-pointer items-center justify-between rounded-lg border-2 border-gray-200 bg-white p-3 text-left normal-case text-gray-500 hover:bg-gray-50 hover:text-gray-600 peer-checked:border-blue-600 peer-checked:bg-blue-200 peer-checked:text-gray-600'
             >
-              <div className='flex justify-between items-center w-full'>
+              <div className='flex w-full items-center justify-between'>
                 <div className='w-full text-sm font-semibold'>{network}</div>
               </div>
             </label>
