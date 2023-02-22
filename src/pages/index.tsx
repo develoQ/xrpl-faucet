@@ -1,10 +1,12 @@
 import type { NextPage } from 'next'
-import { ChangeEventHandler, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { ChangeEventHandler, useCallback, useEffect, useState } from 'react'
 import { overrideTailwindClasses } from 'tailwind-override'
 import { isValidClassicAddress } from 'xrpl/dist/npm/utils'
 
 import { FaucetDataResponse, FaucetRequestBody, FaucetResponse } from './api/faucet'
 import { TokenIssuerResponse } from './api/token-issuer'
+import { SetTrustLineRequestBody, SetTrustlineResponse } from './api/trustline'
 
 import { Network } from '@/@types/network'
 import { Button } from '@/components/Button'
@@ -14,6 +16,7 @@ import { isValidRepresentation } from '@/utils/currency'
 const TOKEN_TYPE = ['XRP', 'TOKEN'] as const
 
 const Home: NextPage = () => {
+  const route = useRouter()
   const [error, setError] = useState<string>()
   const [address, setAddress] = useState<string>('')
   const [issuer, setIssuer] = useState<string>('')
@@ -31,7 +34,6 @@ const Home: NextPage = () => {
           body: JSON.stringify({ network }),
         })
       ).json()
-      console.log(response)
       setIssuer(response.issuer)
     }
     f()
@@ -97,6 +99,21 @@ const Home: NextPage = () => {
     setLoading(false)
   }
 
+  const handleSetTrustLine = useCallback(async () => {
+    const body: SetTrustLineRequestBody = {
+      currency: tokenCode,
+      issuer,
+    }
+    const response: SetTrustlineResponse = await (
+      await fetch('/api/trustline', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      })
+    ).json()
+    const { payload_url } = response
+    window.open(payload_url, '_blank')
+  }, [issuer, tokenCode])
+
   return (
     <div className='flex justify-center'>
       <div className='mb-3 w-full max-w-xl py-36 px-3'>
@@ -147,7 +164,17 @@ const Home: NextPage = () => {
               autoFocus
             />
           </div>
-          <div className='flex justify-center pt-4 sm:pt-0'>
+          <div className='space-y-2 pt-4 sm:pt-0'>
+            {tokenType === 'TOKEN' && (
+              <Button
+                variant='outline'
+                className='ml-2 w-40 p-1 text-sm normal-case'
+                disabled={loading || !!error}
+                onClick={handleSetTrustLine}
+              >
+                Set TrustLine
+              </Button>
+            )}
             <Button
               variant='contained'
               className='ml-2 w-40 p-1 text-sm'

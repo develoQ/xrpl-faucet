@@ -56,7 +56,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     })
     if (!response.ok) {
       const data = (await response.json()) as any
-      console.log(data)
       res.status(400).json({
         message: data.error as string,
       })
