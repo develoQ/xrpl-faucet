@@ -6,7 +6,7 @@ import { FaucetRequestBody, FaucetResponse } from './api/faucet'
 
 import { Network } from '@/@types/network'
 import { Button } from '@/components/Button'
-import { SelectNFTokenMitFlags } from '@/components/SelectFaucetNetwork'
+import { SelectFaucetNetwork } from '@/components/SelectFaucetNetwork'
 
 const Home: NextPage = () => {
   const [error, setError] = useState<string>()
@@ -55,7 +55,7 @@ const Home: NextPage = () => {
       <div className='py-36 px-3 mb-3 w-full max-w-xl'>
         <h1 className='flex-grow mb-12 font-title text-5xl text-center'>XRP Ledger Faucet</h1>
         <div className='my-8'>
-          <SelectNFTokenMitFlags onChange={(n) => setNetwork(n)} />
+          <SelectFaucetNetwork onChange={(n) => setNetwork(n)} />
         </div>
 
         <div className='items-center focus:bg-white sm:flex'>

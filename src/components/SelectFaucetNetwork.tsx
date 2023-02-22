@@ -16,7 +16,7 @@ const networkList: Networks[] = [
   // Network.HooksV3Testnet,
 ]
 
-export const SelectNFTokenMitFlags: FC<Props> = ({ onChange }) => {
+export const SelectFaucetNetwork: FC<Props> = ({ onChange }) => {
   const [selectNetwork, setNetwork] = useState<Networks>(Network.Testnet)
 
   const handleChangeNetwork: ChangeEventHandler<HTMLInputElement> = (e) => {
