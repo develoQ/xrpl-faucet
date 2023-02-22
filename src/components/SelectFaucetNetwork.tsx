@@ -13,6 +13,7 @@ const networkList: Networks[] = [
   // Network.NFTDevnet,
   Network.AMMDevnet,
   Network.HooksV2Testnet,
+  // Network.HooksV3Testnet,
 ]
 
 export const SelectNFTokenMitFlags: FC<Props> = ({ onChange }) => {

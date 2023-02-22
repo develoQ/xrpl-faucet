@@ -9,6 +9,7 @@ enum XRPLNetwork {
   NFTDevnet = 'wss://xls20-sandbox.rippletest.net:51233',
   AMMDevnet = 'wss://amm.devnet.rippletest.net:51233',
   HooksV2Testnet = 'wss://hooks-testnet-v2.xrpl-labs.com',
+  HooksV3Testnet = 'wss://hooks-testnet-v3.xrpl-labs.com',
 }
 
 export type FaucetRequestBody = {
@@ -40,6 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     server = XRPLNetwork.AMMDevnet
   } else if (network === Network.HooksV2Testnet) {
     server = XRPLNetwork.HooksV2Testnet
+  } else if (network === Network.HooksV3Testnet) {
+    server = XRPLNetwork.HooksV3Testnet
   } else {
     throw new Error('invalid network')
   }
@@ -48,12 +51,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   await client.connect()
   const response = await client.fundWallet(account && ({ classicAddress: account } as any))
   await client.disconnect()
-  res
-    .status(200)
-    .json({
-      network: network,
-      address: response.wallet.classicAddress,
-      secret: response.wallet.seed,
-      balance: response.balance,
-    })
+  res.status(200).json({
+    network: network,
+    address: response.wallet.classicAddress,
+    secret: response.wallet.seed,
+    balance: response.balance,
+  })
 }
