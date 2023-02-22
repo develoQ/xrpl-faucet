@@ -1171,14 +1171,13 @@ eslint-plugin-react@^7.27.0:
     semver "^6.3.0"
     string.prototype.matchall "^4.0.6"
 
-eslint-plugin-tailwindcss@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-tailwindcss/-/eslint-plugin-tailwindcss-3.5.0.tgz#861b2c3bc7c058fa24e72ca49910e2ad487cda33"
-  integrity sha512-m1NyKX1qii3arb+zWrsNO5R15b27aaEm6m1ie9JM9a6yBrU9Q8H62obzT/U8PSITIucMY864uxljV8MiP7H6xg==
+eslint-plugin-tailwindcss@^3.9.0:
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-tailwindcss/-/eslint-plugin-tailwindcss-3.9.0.tgz#d6acde1bdbcfc6e1e44a6b1a60cc24146fbfa4fe"
+  integrity sha512-uA2/Q0g22i1uGFI/FTBkLCvpc5VpzMZjAJn3/hPqhongG0V7aaRHrFx4LyfOje/b9Q/t9iarx40InrXKf2jC6w==
   dependencies:
     fast-glob "^3.2.5"
     postcss "^8.4.4"
-    tailwindcss "^3.0.7"
 
 eslint-plugin-unused-imports@^2.0.0:
   version "2.0.0"
@@ -2904,7 +2903,7 @@ tailwindcss@^3:
     quick-lru "^5.1.1"
     resolve "^1.22.1"
 
-tailwindcss@^3.0.23, tailwindcss@^3.0.7:
+tailwindcss@^3.0.23:
   version "3.0.23"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.0.23.tgz#c620521d53a289650872a66adfcb4129d2200d10"
   integrity sha512-+OZOV9ubyQ6oI2BXEhzw4HrqvgcARY38xv3zKcjnWtMIZstEsXdI9xftd1iB7+RbOnj2HOEzkA0OyB5BaSxPQA==

@@ -52,8 +52,8 @@ const Home: NextPage = () => {
 
   return (
     <div className='flex justify-center'>
-      <div className='py-36 px-3 mb-3 w-full max-w-xl'>
-        <h1 className='flex-grow mb-12 font-title text-5xl text-center'>XRP Ledger Faucet</h1>
+      <div className='mb-3 w-full max-w-xl py-36 px-3'>
+        <h1 className='mb-12 flex-grow text-center font-title text-5xl'>XRP Ledger Faucet</h1>
         <div className='my-8'>
           <SelectFaucetNetwork onChange={(n) => setNetwork(n)} />
         </div>
@@ -72,14 +72,14 @@ const Home: NextPage = () => {
           <div className='flex justify-center pt-4 sm:pt-0'>
             <Button
               variant='contained'
-              className='p-1 ml-2 w-40 text-sm'
+              className='ml-2 w-40 p-1 text-sm'
               disabled={loading || !!error}
               onClick={handleGetFaucet}
             >
-              <div className='flex relative justify-center items-center text-center'>
+              <div className='relative flex items-center justify-center text-center'>
                 {loading && (
                   <svg
-                    className='absolute mr-2 w-8 h-8 text-blue-700 animate-spin'
+                    className='absolute mr-2 h-8 w-8 animate-spin text-blue-700'
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
                     viewBox='0 0 24 24'
