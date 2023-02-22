@@ -10,14 +10,11 @@ type Props = {
 } & DOMAttributes<HTMLButtonElement>
 
 export const Button: FC<Props> = ({ variant, onClick, children, className, disabled, ...props }) => {
-  const commonClassName =
-    'btn rounded w-48 py-2 px-4 transition duration-100 ripple-bg-black disabled:cursor-not-allowed disabled:opacity-50'
+  const commonClassName = 'btn w-48 btn-primary'
 
-  const containedClassName = 'border border-blue-700 bg-blue-500 font-bold text-white enabled:hover:bg-blue-700'
-  const outlineClassName =
-    'border border-blue-500 bg-transparent font-semibold text-blue-700 enabled:hover:border-transparent enabled:hover:bg-blue-500 enabled:hover:text-white'
-  const textClassName =
-    'bg-transparent font-semibold text-blue-700 enabled:hover:border-transparent enabled:hover:bg-blue-100'
+  const containedClassName = 'border'
+  const outlineClassName = 'btn-outline'
+  const textClassName = 'btn-ghost'
 
   return (
     <button
