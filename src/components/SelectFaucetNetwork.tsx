@@ -10,10 +10,8 @@ type Props = {
 const networkList: Networks[] = [
   Network.Testnet,
   Network.Devnet,
-  // Network.NFTDevnet,
   Network.AMMDevnet,
-  Network.HooksV2Testnet,
-  // Network.HooksV3Testnet,
+  // Network.HooksV3Testnet
 ]
 
 export const SelectFaucetNetwork: FC<Props> = ({ onChange }) => {
