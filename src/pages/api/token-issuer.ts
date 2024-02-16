@@ -19,10 +19,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const body = JSON.parse(req.body) as TokenIssuerRequestBody
 
   const url = getTokenFaucetUrl(body.network)
-  const response = await fetch(`${url}/issuer`)
 
-  const data = (await response.json()) as any
-  res.status(200).json({
-    issuer: data.issuer,
-  })
+  if (url) {
+    const response = await fetch(`${url}/issuer`)
+
+    const data = (await response.json()) as any
+    res.status(200).json({
+      issuer: data.issuer,
+    })
+  } else {
+    res.status(200).json({
+      issuer: '',
+    })
+  }
 }

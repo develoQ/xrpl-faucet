@@ -28,13 +28,18 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const f = async () => {
-      const response: TokenIssuerResponse = await (
-        await fetch('/api/token-issuer', {
-          method: 'POST',
-          body: JSON.stringify({ network }),
-        })
-      ).json()
-      setIssuer(response.issuer)
+      setError(undefined)
+      try {
+        const response: TokenIssuerResponse = await (
+          await fetch('/api/token-issuer', {
+            method: 'POST',
+            body: JSON.stringify({ network }),
+          })
+        ).json()
+        setIssuer(response.issuer)
+      } catch (e) {
+        setIssuer('')
+      }
     }
     f()
   }, [network])
@@ -127,12 +132,13 @@ const Home: NextPage = () => {
             {TOKEN_TYPE.map((type) => (
               <button
                 key={type}
+                disabled={type === 'TOKEN' && !issuer}
                 className={overrideTailwindClasses(
                   `btn btn-primary w-1/2 ${tokenType === type ? 'btn-active' : 'btn-outline'}`
                 )}
                 onClick={() => setTokenType(type)}
               >
-                {type}
+                {type === 'XRP' && network === Network.XahauTestnet ? 'XAH' : type}
               </button>
             ))}
           </div>

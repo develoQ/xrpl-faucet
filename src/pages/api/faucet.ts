@@ -7,23 +7,23 @@ import { getXRPFaucetNetwork, getTokenFaucetUrl } from '@/utils/faucet'
 
 export type FaucetRequestBody =
   | {
-      type: 'XRP'
-      account?: string
-      network: Network
-    }
+    type: 'XRP'
+    account?: string
+    network: Network
+  }
   | {
-      type: 'TOKEN'
-      account?: string
-      network: Network
-      currency: string
-    }
+    type: 'TOKEN'
+    account?: string
+    network: Network
+    currency: string
+  }
 
 export type FaucetDataResponse = { network: Network; address: string; secret?: string; balance: number }
 export type FaucetResponse =
   | FaucetDataResponse
   | {
-      message: string
-    }
+    message: string
+  }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<FaucetResponse>) {
   if (req.method !== 'POST') {
