@@ -7,7 +7,7 @@ type Props = {
   onChange: (network: Networks) => void
 }
 
-const networkList: Networks[] = [Network.Testnet, Network.Devnet, Network.XahauTestnet]
+const networkList: Networks[] = [Network.Testnet, Network.Devnet, Network.XahauTestnet, Network.Local]
 
 export const SelectFaucetNetwork: FC<Props> = ({ onChange }) => {
   const [selectNetwork, setNetwork] = useState<Networks>(Network.Testnet)

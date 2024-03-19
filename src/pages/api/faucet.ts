@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Client } from 'xrpl'
+import { Client, Wallet } from 'xrpl'
 
 import { Network } from '@/@types/network'
 import { getXRPFaucetNetwork } from '@/utils/faucet'
@@ -22,16 +22,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     res.status(404).end()
   }
   const body = JSON.parse(req.body) as FaucetRequestBody
-  const server = getXRPFaucetNetwork(body.network)
   const { account, network } = body
-  const client = new Client(server)
-  await client.connect()
-  const response = await client.fundWallet(account && ({ classicAddress: account } as any))
-  await client.disconnect()
-  res.status(200).json({
-    network: network,
-    address: response.wallet.classicAddress,
-    secret: response.wallet.seed,
-    balance: response.balance,
-  })
+  if (network === Network.Local) {
+    const wallet = Wallet.generate()
+    res.status(200).json({
+      network: network,
+      address: wallet.address,
+      secret: wallet.seed,
+      balance: 0,
+    })
+  } else {
+    const server = getXRPFaucetNetwork(network)
+    const client = new Client(server)
+    await client.connect()
+    const response = await client.fundWallet(account && ({ classicAddress: account } as any))
+    await client.disconnect()
+    res.status(200).json({
+      network: network,
+      address: response.wallet.classicAddress,
+      secret: response.wallet.seed,
+      balance: response.balance,
+    })
+  }
 }
