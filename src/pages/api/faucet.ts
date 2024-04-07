@@ -31,9 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 
   // @ts-ignore
-  let ip = req.ip ?? req.headers.get("x-real-ip") ?? "";
-  // @ts-ignore
-  const forwardedFor = req.headers.get("x-forwarded-for");
+  let ip = req.ip ?? req.headers['x-real-ip'] ?? "";
+  const forwardedFor = req.headers["x-forwarded-for"] as string;
   if (!ip && forwardedFor) {
     ip = forwardedFor.split(",").at(0) ?? "Unknown";
   }
