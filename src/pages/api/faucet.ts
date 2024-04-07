@@ -40,7 +40,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     await limiter.check(10, ip);
   } catch (error) {
     console.error('ip limiting')
-    console.error('host: ' + req.headers.host)
     console.error(req.body)
     res.status(429).json({ text: "Rate Limited" });
     return;
@@ -50,12 +49,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   try {
     if (body.account) {
+      const blockedAddresses = process.env.BLOCKED_ADDRESS?.split(',')
+      if (blockedAddresses?.includes(body.account)) {
+        console.error('blocked address')
+        throw new Error('Address is blocked')
+      }
       // limit 1 requests per 5 minutes from the same address
       await limiter.check(1, body.account);
     }
   } catch (error) {
     console.error('account limiting')
-    console.error('host: ' + req.headers.host)
     console.error(req.body)
     res.status(429).json({ text: "Rate Limited" });
     return;
