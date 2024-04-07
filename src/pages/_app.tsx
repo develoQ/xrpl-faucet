@@ -1,5 +1,6 @@
 import '../../styles/globals.css'
 import 'tailwindcss/tailwind.css'
+import { Analytics } from '@vercel/analytics/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 
@@ -25,6 +26,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <Header />
       <main className=''>
         <Component {...pageProps} />
+        <Analytics />
       </main>
       <Footer />
     </>

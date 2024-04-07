@@ -8,6 +8,7 @@
     "lint": "next lint && prettier . --write"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.2.2",
     "daisyui": "^2.50.2",
     "next": "12.1.0",
     "node-fetch": "^3.3.0",
