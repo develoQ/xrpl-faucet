@@ -1,6 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Client, Wallet } from 'xrpl'
 
+import { LimitChecker } from "../../lib/limitchecker";
+
+const limiter = LimitChecker();
+
 import { Network } from '@/@types/network'
 import { getXRPFaucetNetwork } from '@/utils/faucet'
 
@@ -16,11 +20,30 @@ export type FaucetResponse =
   | {
     message: string
   }
+type LimitData = {
+  text: string;
+  clientIp: string;
+};
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<FaucetResponse>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<FaucetResponse | LimitData>) {
   if (req.method !== 'POST') {
     res.status(404).end()
   }
+
+  // @ts-ignore
+  let ip = req.ip ?? req.headers.get("x-real-ip") ?? "";
+  // @ts-ignore
+  const forwardedFor = req.headers.get("x-forwarded-for");
+  if (!ip && forwardedFor) {
+    ip = forwardedFor.split(",").at(0) ?? "Unknown";
+  }
+  try {
+    // limit 10 requests per 5 minutes from the same IP
+    await limiter.check(10, ip);
+  } catch (error) {
+    return new Response("Rate Limited", { status: 429 });
+  }
+
   const body = JSON.parse(req.body) as FaucetRequestBody
   const { account, network } = body
   if (network === Network.Local) {
