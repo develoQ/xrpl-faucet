@@ -22,7 +22,6 @@ export type FaucetResponse =
   }
 type LimitData = {
   text: string;
-  clientIp: string;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<FaucetResponse | LimitData>) {
@@ -40,10 +39,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     // limit 10 requests per 5 minutes from the same IP
     await limiter.check(10, ip);
   } catch (error) {
-    return new Response("Rate Limited", { status: 429 });
+    console.error(req.body)
+    res.status(429).json({ text: "Rate Limited" });
+    return;
   }
 
   const body = JSON.parse(req.body) as FaucetRequestBody
+
+  try {
+    if (body.account) {
+      // limit 1 requests per 5 minutes from the same address
+      await limiter.check(1, body.account);
+    }
+  } catch (error) {
+    console.error(req.body)
+    res.status(429).json({ text: "Rate Limited" });
+    return;
+  }
+
   const { account, network } = body
   if (network === Network.Local) {
     const wallet = Wallet.generate()
