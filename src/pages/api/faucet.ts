@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (body.account) {
       const blockedAddresses = process.env.BLOCKED_ADDRESS?.split(',')
       if (blockedAddresses?.includes(body.account)) {
-        console.error('blocked address')
+        console.error('blocked address: ' + process.env.BLOCKED_ADDRESS)
         throw new Error('Address is blocked')
       }
       // limit 1 requests per 5 minutes from the same address
@@ -79,6 +79,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     await client.connect()
     const response = await client.fundWallet(account && ({ classicAddress: account } as any))
     await client.disconnect()
+    console.log(req.body)
     res.status(200).json({
       network: network,
       address: response.wallet.classicAddress,
